@@ -2,8 +2,8 @@
 
 ![Logo](https://github.com/htrnguyen/Coursera-Auto-Subtitle/raw/main/coursera-auto-subtitle-logo.png)
 
-![GitHub](https://img.shields.io/github/license/htrnguyen/Coursera-Auto-Subtitle?style=flat-square)
-![Greasy Fork Version](https://img.shields.io/greasyfork/v/522571?label=Greasy%20Fork&style=flat-square)
+![GitHub License](https://img.shields.io/github/license/htrnguyen/Coursera-Auto-Subtitle?style=for-the-badge)
+![Greasy Fork Version](https://img.shields.io/greasyfork/v/522571?label=Greasy%20Fork&style=for-the-badge)
 
 **Coursera Auto Subtitle** is a userscript that automatically enables, enhances, and translates subtitles on Coursera. With a user-friendly interface, the script provides features such as:
 
