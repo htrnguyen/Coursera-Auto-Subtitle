@@ -2,8 +2,8 @@
 
 ![Logo](https://github.com/htrnguyen/Coursera-Auto-Subtitle/raw/main/coursera-auto-subtitle-logo.png)
 
-![GitHub](https://img.shields.io/github/license/htrnguyen/Coursera-Auto-Subtitle?style=flat-square)
-![Greasy Fork](https://img.shields.io/greasyfork/v/522571?label=Greasy%20Fork&style=flat-square)
+![GitHub License](https://img.shields.io/github/license/htrnguyen/Coursera-Auto-Subtitle?style=flat-square)
+![Greasy Fork Version](https://img.shields.io/greasyfork/v/522571?label=Greasy%20Fork&style=flat-square)
 
 **Coursera Auto Subtitle** is a userscript that automatically enables, enhances, and translates subtitles on Coursera. With a user-friendly interface, the script provides features such as:
 
@@ -37,16 +37,18 @@
 ## Demo
 ![Demo](https://github.com/htrnguyen/Coursera-Auto-Subtitle/raw/main/DEMO.png)
 
-## Versions
-- **1.0**: Initial release with basic features: enable/disable subtitles, translate subtitles, and language selection.
-- **2.0**: Added draggable icon and improved performance.
-- **2.5**: Updated menu position based on icon location.
+## Version 1.0
+This is the **first release** of Coursera Auto Subtitle. Key features include:
+- Enable/disable subtitles.
+- Translate subtitles in real-time.
+- Select from multiple supported languages.
+- Draggable icon for better user experience.
 
 ## Support
 If you encounter any issues or have ideas for improvement, please create an [issue](https://github.com/htrnguyen/Coursera-Auto-Subtitle/issues) on GitHub.
 
 ## License
-This project is licensed under the **MIT License**. See the [LICENSE](https://github.com/htrnguyen/Coursera-Auto-Subtitle/blob/main/LICENSE) file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](https://github.com/htrnguyen/Coursera-Auto-Subtitle/raw/main/LICENSE) file for details.
 
 ---
 
