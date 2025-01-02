@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Coursera Auto Subtitle
 // @namespace    https://github.com/htrnguyen/Coursera-Auto-Subtitle
-// @version      2.8
+// @version      1.0
 // @description  Automatically enables, enhances, and translates subtitles on Coursera. Features include a draggable icon, customizable language selection, and real-time translation using Google Translate.
 // @author       Hà Trọng Nguyễn (htrnguyen)
 // @match        https://www.coursera.org/learn/*
@@ -22,7 +22,7 @@
 
     let isSubtitlesEnabled = false;
     let subtitleDisplayElement = null;
-    let targetLanguage = 'vi';
+    let targetLanguage = 'en'; // Default language is English
 
     const LANGUAGES = {
         vi: 'Tiếng Việt',
@@ -133,7 +133,7 @@
         updateMenuPosition();
 
         const toggleButton = document.createElement('button');
-        toggleButton.textContent = isSubtitlesEnabled ? 'Tắt phụ đề' : 'Bật phụ đề';
+        toggleButton.textContent = isSubtitlesEnabled ? 'Disable Subtitles' : 'Enable Subtitles';
         toggleButton.style.display = 'block';
         toggleButton.style.width = '100%';
         toggleButton.style.marginBottom = '10px';
@@ -144,7 +144,7 @@
         toggleButton.addEventListener('click', (event) => {
             event.stopPropagation();
             isSubtitlesEnabled = !isSubtitlesEnabled;
-            toggleButton.textContent = isSubtitlesEnabled ? 'Tắt phụ đề' : 'Bật phụ đề';
+            toggleButton.textContent = isSubtitlesEnabled ? 'Disable Subtitles' : 'Enable Subtitles';
             if (isSubtitlesEnabled) {
                 enableSubtitles();
             } else {
