@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         Coursera Auto Subtitle
 // @namespace    https://github.com/htrnguyen/Coursera-Auto-Subtitle
-// @version      2.3
+// @version      2.8
 // @description  Automatically enables, enhances, and translates subtitles on Coursera. Features include a draggable icon, customizable language selection, and real-time translation using Google Translate.
 // @author       Hà Trọng Nguyễn (htrnguyen)
 // @match        https://www.coursera.org/learn/*
 // @grant        GM_xmlhttpRequest
 // @connect      translate.googleapis.com
 // @license      MIT
+// @icon         https://github.com/htrnguyen/Coursera-Auto-Subtitle/raw/main/coursera-auto-subtitle-logo.png
 // ==/UserScript==
 
 (function () {
@@ -32,19 +33,19 @@
         fr: 'Français',
     };
 
+    let icon, menu;
+
     function createDraggableIcon() {
-        const icon = document.createElement('div');
-        icon.textContent = '📜';
+        icon = document.createElement('img');
+        icon.src = 'https://github.com/htrnguyen/Coursera-Auto-Subtitle/raw/main/coursera-auto-subtitle-logo.png';
         icon.style.position = 'fixed';
-        icon.style.bottom = '20px';
-        icon.style.right = '20px';
+        icon.style.top = '20px';
+        icon.style.left = '20px';
         icon.style.zIndex = '9999';
         icon.style.cursor = 'pointer';
-        icon.style.fontSize = '24px';
+        icon.style.width = '32px';
+        icon.style.height = '32px';
         icon.style.userSelect = 'none';
-        icon.style.width = '24px';
-        icon.style.height = '24px';
-        icon.style.textAlign = 'center';
 
         let isDragging = false;
         let offsetX, offsetY;
@@ -53,36 +54,74 @@
             isDragging = true;
             offsetX = event.clientX - icon.getBoundingClientRect().left;
             offsetY = event.clientY - icon.getBoundingClientRect().top;
+            icon.style.cursor = 'grabbing';
         });
 
         document.addEventListener('mousemove', (event) => {
             if (isDragging) {
-                icon.style.left = `${event.clientX - offsetX}px`;
-                icon.style.top = `${event.clientY - offsetY}px`;
+                const newLeft = event.clientX - offsetX;
+                const newTop = event.clientY - offsetY;
+
+                // Giới hạn icon trong phạm vi màn hình
+                icon.style.left = `${Math.max(0, Math.min(window.innerWidth - icon.offsetWidth, newLeft))}px`;
+                icon.style.top = `${Math.max(0, Math.min(window.innerHeight - icon.offsetHeight, newTop))}px`;
+
+                if (menu) {
+                    updateMenuPosition();
+                }
             }
         });
 
         document.addEventListener('mouseup', () => {
-            isDragging = false;
+            if (isDragging) {
+                isDragging = false;
+                icon.style.cursor = 'pointer';
+            }
         });
 
         icon.addEventListener('click', (event) => {
             event.stopPropagation();
-            showMenu(icon);
+            showMenu();
         });
 
         document.body.appendChild(icon);
     }
 
-    function showMenu(icon) {
-        const existingMenu = document.querySelector('.subtitle-menu');
-        if (existingMenu) existingMenu.remove();
+    function updateMenuPosition() {
+        const iconRect = icon.getBoundingClientRect();
+        const menuWidth = 180; // Chiều rộng menu
+        const menuHeight = 120; // Chiều cao menu (ước lượng)
 
-        const menu = document.createElement('div');
+        // Kiểm tra vị trí icon để hiển thị menu phù hợp
+        if (iconRect.left + icon.offsetWidth + menuWidth > window.innerWidth) {
+            // Icon ở viền phải, hiển thị menu bên trái
+            menu.style.left = `${iconRect.left - menuWidth}px`;
+            menu.style.top = `${iconRect.top}px`;
+        } else if (iconRect.top + icon.offsetHeight + menuHeight > window.innerHeight) {
+            // Icon ở viền dưới, hiển thị menu bên trên
+            menu.style.left = `${iconRect.left + icon.offsetWidth}px`;
+            menu.style.top = `${iconRect.top - menuHeight}px`;
+        } else if (iconRect.top - menuHeight < 0) {
+            // Icon ở viền trên, hiển thị menu bên dưới
+            menu.style.left = `${iconRect.left + icon.offsetWidth}px`;
+            menu.style.top = `${iconRect.top + icon.offsetHeight}px`;
+        } else {
+            // Mặc định hiển thị menu bên phải
+            menu.style.left = `${iconRect.left + icon.offsetWidth}px`;
+            menu.style.top = `${iconRect.top}px`;
+        }
+    }
+
+    function showMenu() {
+        if (menu) {
+            menu.remove();
+            menu = null;
+            return;
+        }
+
+        menu = document.createElement('div');
         menu.classList.add('subtitle-menu');
-        menu.style.position = 'absolute';
-        menu.style.top = '0';
-        menu.style.left = '30px';
+        menu.style.position = 'fixed';
         menu.style.backgroundColor = 'white';
         menu.style.border = '1px solid #ccc';
         menu.style.borderRadius = '5px';
@@ -91,8 +130,10 @@
         menu.style.zIndex = '10000';
         menu.style.width = '180px';
 
+        updateMenuPosition();
+
         const toggleButton = document.createElement('button');
-        toggleButton.textContent = isSubtitlesEnabled ? 'Tắt Phụ Đề' : 'Bật Phụ Đề';
+        toggleButton.textContent = isSubtitlesEnabled ? 'Tắt phụ đề' : 'Bật phụ đề';
         toggleButton.style.display = 'block';
         toggleButton.style.width = '100%';
         toggleButton.style.marginBottom = '10px';
@@ -103,13 +144,14 @@
         toggleButton.addEventListener('click', (event) => {
             event.stopPropagation();
             isSubtitlesEnabled = !isSubtitlesEnabled;
-            toggleButton.textContent = isSubtitlesEnabled ? 'Tắt Phụ Đề' : 'Bật Phụ Đề';
+            toggleButton.textContent = isSubtitlesEnabled ? 'Tắt phụ đề' : 'Bật phụ đề';
             if (isSubtitlesEnabled) {
                 enableSubtitles();
             } else {
                 disableSubtitles();
             }
             menu.remove();
+            menu = null;
         });
 
         const languageSelect = document.createElement('select');
@@ -141,11 +183,12 @@
 
         menu.appendChild(toggleButton);
         menu.appendChild(languageSelect);
-        icon.appendChild(menu);
+        document.body.appendChild(menu);
 
         document.addEventListener('click', (event) => {
             if (!menu.contains(event.target) && !icon.contains(event.target)) {
                 menu.remove();
+                menu = null;
             }
         });
     }
